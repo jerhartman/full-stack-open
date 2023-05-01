@@ -133,6 +133,10 @@ const App = () => {
         })
         .catch(error => {
           console.log(`cannot add person: ${error}`);
+          setError(`Person validation failed. \'${newName}\' is shorter than the minimum allowed length (3)`);
+          setTimeout(() => {
+            setError(null);
+          }, 5000);
         })
     }
     else {
@@ -148,7 +152,7 @@ const App = () => {
         })
         .catch(error => {
           console.log(`cannot update person: ${error}`);
-          setError(`Information on ${newName} has already been removed from the server`);
+          setError(`Could not update ${newName} in the server`);
           setTimeout(() => {
             setError(null);
           }, 5000);

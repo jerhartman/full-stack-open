@@ -1,9 +1,11 @@
 // index file for the phonebook backend
 
-// import express, morgan, and cors
+// import express, morgan, cors, and Person model
+require('dotenv').config()
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const Person = require('./models/person')
 
 // create app using express
 const app = express();
@@ -46,59 +48,87 @@ let persons = [
 // get request for all persons
 app.get('/api/persons', (request, response) => {
   console.log('get request for all persons');
-  response.json(persons);
+  Person.find({}).then(people => {
+    response.json(people);
+  }).catch(error => {
+    console.log('could not fetch all persons:', error.message);
+    return response.status(400).json({ error: 'content missing' })
+  })
 });
 
 // get info page 
 app.get('/info', (request, response) => {
   console.log('info get request');
-  let len = persons.length;
-  let now = new Date();
-  let text = `<p>Phonebook has info for ${len} people</p><p>${now}</p>`
-  response.send(text);
+  Person.find({}).then(people => {
+    const len = people.length
+    const now = new Date();
+    const text = `<p>Phonebook has info for ${len} people</p><p>${now}</p>`
+    response.send(text);
+  }).catch(error => {
+    console.log('internal server error:', error.message);
+    response.status(500).end();
+  })
 });
 
-// get individual person from persons
+// get individual person from database
 app.get('/api/persons/:id', (request, response) => {
-  let id = Number(request.params.id);
-  let person = persons.find(p => p.id === id);
-  if(!person) {
-    return response.status(404).end();
-  }
-  response.json(person);
+  let id = request.params.id;
+  Person.findById(id).then(person => {
+    if (!person) {
+      return response.status(404).end();
+    }
+    response.json(person)
+  }).catch(error => {
+    console.log(error);
+    response.status(400).send({ error: 'malformatted id' })
+  })
 })
 
 // delete a person
 app.delete('/api/persons/:id', (request, response) => {
-  let id = Number(request.params.id);
-  persons = persons.filter(p => p.id !== id);
-  response.status(204).end();
+  let id = request.params.id;
+  Person.findByIdAndRemove(id).then(result => {
+    response.status(204).end();
+  }).catch(error => {
+    console.log('internal server error:', error.message);
+    response.status(500).end();
+  });
 });
 
 // function to generate an new ID
-const generateID = () => Math.floor(Math.random() * 999999);
+// const generateID = () => Math.floor(Math.random() * 999999);
 
 // add new person with random ID
 app.post('/api/persons', (request, response) => {
-  let body = request.body;
-  let dupe = persons.find(p => p.name === body.name)
-  if(!body.name || !body.number) {
-    return response.status(400).json({
-      error: "missing name or number"
-    });
+  if (request.body === undefined) {
+    return response.status(400).json({ error: 'content missing' })
   }
-  else if(dupe) {
-    return response.status(400).json({
-      error: "name must be unique"
-    });
-  }
-  let person = {
-    id: generateID(),
+  const person = new Person({
+    name: request.body.name,
+    number: request.body.number,
+  });
+  person.save().then(savedPerson => {
+    response.json(savedPerson);
+  }).catch(error => {
+    console.log('internal server error:', error.message);
+    response.status(500).end();
+  })
+});
+
+// update a person's phone number 
+app.put('/api/persons/:id', (request, response) => {
+  const body = request.body
+  const person = {
     name: body.name,
-    number: body.number
-  };
-  persons = persons.concat(person);
-  response.json(person);
+    number: body.number,
+  }
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson);
+    }).catch(error => {
+      console.log('internal server error:', error.message);
+      response.status(500).end();
+    });
 });
 
 // listen on port

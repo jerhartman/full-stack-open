@@ -1,0 +1,38 @@
+
+// send get request for all blogs
+GET http://localhost:3003/api/blogs
+
+###
+
+// get request for a single blog
+GET http://localhost:3003/api/blogs/6451a0e47fcbfccf6ed61d61
+
+###
+
+// send post request for a new blog
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "am i gay quiz",
+  "author": "jeremy",
+  "url": "serve.com/amigay?gay=true",
+  "likes": 80000
+}
+
+###
+
+PUT http://localhost:3003/api/blogs/6451a39b7fcbfccf6ed61d68
+Content-Type: application/json
+
+{
+  "title": "how to get away with murder",
+  "author": "jason yu sumpter",
+  "url": "serve.com/yaas",
+  "likes": 50
+}
+
+###
+
+// send delete request for a blog
+DELETE http://localhost:3003/api/blogs/6451a7af4a94980a4f33890e

@@ -13,12 +13,12 @@ const middleware = require('./utils/middleware');
 const blogRouter = require('./controllers/blogs');
 
 // connect to mongo server
-mongo_url = config.MONGODB_URI;
+const mongo_url = config.MONGODB_URI;
 mongoose.set('strictQuery', false);
 logger.info('connecting to', mongo_url);
 mongoose.connect(mongo_url)
   .then(() => {
-  logger.info('connected to MongoDB');
+    logger.info('connected to MongoDB');
   })
   .catch(error => {
     logger.error('error connecting to MongoDB:', error.message);
@@ -35,4 +35,4 @@ app.use('/api/blogs', blogRouter);
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
-module.exports = app
+module.exports = app;

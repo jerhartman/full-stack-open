@@ -1,6 +1,6 @@
 // controller for HTTP requests involving blogs
 
-const blogRouter = require('express').Router()
+const blogRouter = require('express').Router();
 const Blog = require('./../models/blog');
 // const logger = require('./../utils/logger')
 
@@ -20,7 +20,7 @@ blogRouter.get('/:id', (request, response, next) => {
       response.status(404).end();
     }
   })
-  .catch(error => next(error));
+    .catch(error => next(error));
 });
 
 // post a new blog to the server
@@ -29,11 +29,11 @@ blogRouter.post('/', (request, response, next) => {
   if (!body) {
     return response.status(400).json({ error: 'content missing' });
   }
-  const blog = new Blog(body)
+  const blog = new Blog(body);
   blog.save().then(result => {
     response.status(204).json(result);
   })
-  .catch(error => next(error));
+    .catch(error => next(error));
 });
 
 // update a blog given the blog id
@@ -59,7 +59,7 @@ blogRouter.put('/:id', (request, response, next) => {
 blogRouter.delete('/:id', (request, response, next) => {
   Blog.findByIdAndRemove(request.params.id)
     .then(() => {
-      response.status(204).end()
+      response.status(204).end();
     })
     .catch(error => next(error));
 });

@@ -17,5 +17,6 @@ blogSchema.set('toJSON', {
     delete returnedObject.__v;
   }
 });
+
 // export model to be used in blog controller
 module.exports = mongoose.model('Blog', blogSchema);

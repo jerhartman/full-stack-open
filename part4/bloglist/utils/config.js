@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // config variables for application
 
 require('dotenv').config();

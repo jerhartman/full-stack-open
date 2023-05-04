@@ -5,39 +5,37 @@ const Blog = require('./../models/blog');
 // const logger = require('./../utils/logger')
 
 // get all blogs from server
-blogRouter.get('/', (request, response) => {
-  Blog.find({}).then(blogs => {
-    response.json(blogs);
-  });
+blogRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({});
+  response.json(blogs);
 });
 
 // get a specific blog post by id
-blogRouter.get('/:id', (request, response, next) => {
-  Blog.findById(request.params.id).then(blog => {
-    if (blog) {
-      response.json(blog);
-    } else {
-      response.status(404).end();
-    }
-  })
-    .catch(error => next(error));
+blogRouter.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  if (blog) {
+    response.json(blog);
+  } else {
+    response.status(404).end();
+  }
 });
 
 // post a new blog to the server
-blogRouter.post('/', (request, response, next) => {
+blogRouter.post('/', async (request, response) => {
   const body = request.body;
-  if (!body) {
+  if (!body.title || !body.url) {
     return response.status(400).json({ error: 'content missing' });
   }
   const blog = new Blog(body);
-  blog.save().then(result => {
-    response.status(204).json(result);
-  })
-    .catch(error => next(error));
+  if (!blog.likes) {
+    blog.likes = 0;
+  }
+  const savedBlog = await blog.save();
+  response.status(201).json(savedBlog);
 });
 
 // update a blog given the blog id
-blogRouter.put('/:id', (request, response, next) => {
+blogRouter.put('/:id', async (request, response) => {
   const body = request.body;
   if (!body) {
     return response.status(400).json({ error: 'content missing' });
@@ -48,20 +46,14 @@ blogRouter.put('/:id', (request, response, next) => {
     url: body.url,
     likes: body.likes
   };
-  Blog.findByIdAndUpdate(request.params.id, note, { new: true })
-    .then(updatedBlog => {
-      response.json(updatedBlog);
-    })
-    .catch(error => next(error));
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, note, { new: true });
+  response.json(updatedBlog);
 });
 
 // delete a blog given the blog id
-blogRouter.delete('/:id', (request, response, next) => {
-  Blog.findByIdAndRemove(request.params.id)
-    .then(() => {
-      response.status(204).end();
-    })
-    .catch(error => next(error));
+blogRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndRemove(request.params.id);
+  response.status(204).end();
 });
 
 // export the router to app.js

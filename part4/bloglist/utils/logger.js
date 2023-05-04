@@ -2,12 +2,16 @@
 
 // log information to console
 const info = (message) => {
-  console.log(message)
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(message);
+  }
 };
 
 // log error to console
 const error = (message) => {
-  console.error(message)
+  if (process.env.NODE_ENV !== 'test') {
+    console.error(message);
+  }
 };
 
 module.exports = { info, error };

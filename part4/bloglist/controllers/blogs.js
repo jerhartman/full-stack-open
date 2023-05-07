@@ -2,11 +2,13 @@
 
 const blogRouter = require('express').Router();
 const Blog = require('./../models/blog');
+const User = require('./../models/user');
 // const logger = require('./../utils/logger')
 
 // get all blogs from server
 blogRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog
+    .find({}).populate('user', { username: 1, name: 1 });
   response.json(blogs);
 });
 
@@ -23,15 +25,18 @@ blogRouter.get('/:id', async (request, response) => {
 // post a new blog to the server
 blogRouter.post('/', async (request, response) => {
   const body = request.body;
-  if (!body.title || !body.url) {
-    return response.status(400).json({ error: 'content missing' });
-  }
-  const blog = new Blog(body);
-  if (!blog.likes) {
-    blog.likes = 0;
-  }
+  const user = await User.findById(body.userID);
+  const blog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes !== undefined ? body.likes : 0, 
+    user: user.id
+  });
   const savedBlog = await blog.save();
-  response.status(201).json(savedBlog);
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
+  response.json(savedBlog);
 });
 
 // update a blog given the blog id

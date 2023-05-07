@@ -4,10 +4,20 @@ const mongoose = require('mongoose');
 
 // schema for a blog
 const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
+  title: {
+    type: String,
+    required: true
+  },
+  author: {
+    type: String,
+    required: true
+  },
   url: String,
-  likes: Number
+  likes: Number,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 // edit toJSON function of schema, _id --> id, delete _id and __v
 blogSchema.set('toJSON', {

@@ -1,0 +1,34 @@
+
+// send get request for all users
+GET http://localhost:3003/api/users
+
+###
+
+// get request for a single blog
+GET http://localhost:3003/api/users/id
+
+###
+
+// send post request for a new blog
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "jhart",
+  "name": "jeremy",
+  "password": "pword"
+}
+
+###
+
+PUT http://localhost:3003/api/users/id
+Content-Type: application/json
+
+{
+  
+}
+
+###
+
+// send delete request for a blog
+DELETE http://localhost:3003/api/users/6456dafdf099b3fb37179de4

@@ -5,7 +5,7 @@ GET http://localhost:3003/api/blogs
 ###
 
 // get request for a single blog
-GET http://localhost:3003/api/blogs/6451a0e47fcbfccf6ed61d61
+GET http://localhost:3003/api/blogs/id
 
 ###
 
@@ -14,15 +14,16 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "wednesday test",
-  "author": "jeremy",
-  "url": "serve.com/amigay?gay=true",
-  "likes": 80000
+  "title": "how i test my backend",
+  "author": "steven segfault",
+  "url": "example.com/test",
+  "likes": 24,
+  "userID": "6456eba991a1266cf91347d7"
 }
 
 ###
 
-PUT http://localhost:3003/api/blogs/6452d061a16969f95c97b009
+PUT http://localhost:3003/api/blogs/id
 Content-Type: application/json
 
 {
@@ -35,4 +36,4 @@ Content-Type: application/json
 ###
 
 // send delete request for a blog
-DELETE http://localhost:3003/api/blogs/6452d061a16969f95c97b009
+DELETE http://localhost:3003/api/blogs/id

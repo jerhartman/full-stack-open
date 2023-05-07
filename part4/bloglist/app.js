@@ -10,8 +10,9 @@ const mongoose = require('mongoose');
 const config = require('./utils/config');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
-// import blog router
+// import routers
 const blogRouter = require('./controllers/blogs');
+const userRouter = require('./controllers/users');
 
 // connect to mongo server
 const mongo_url = config.MONGODB_URI;
@@ -30,8 +31,9 @@ app.use(cors());
 app.use(express.static('build'));
 app.use(express.json());
 app.use(middleware.requestLogger);
-// blog routes
+// router routes
 app.use('/api/blogs', blogRouter);
+app.use('/api/users', userRouter);
 // error handlers
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

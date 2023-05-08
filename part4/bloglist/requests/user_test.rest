@@ -30,5 +30,5 @@ Content-Type: application/json
 
 ###
 
-// send delete request for a blog
-DELETE http://localhost:3003/api/users/6456dafdf099b3fb37179de4
+// send delete request for a user
+DELETE http://localhost:3003/api/users/6456eba991a1266cf91347d7

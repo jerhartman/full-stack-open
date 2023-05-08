@@ -13,6 +13,7 @@ const middleware = require('./utils/middleware');
 // import routers
 const blogRouter = require('./controllers/blogs');
 const userRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
 
 // connect to mongo server
 const mongo_url = config.MONGODB_URI;
@@ -31,9 +32,11 @@ app.use(cors());
 app.use(express.static('build'));
 app.use(express.json());
 app.use(middleware.requestLogger);
-// router routes
+app.use(middleware.tokenExtractor);
+// routes
 app.use('/api/blogs', blogRouter);
 app.use('/api/users', userRouter);
+app.use('/api/login', loginRouter);
 // error handlers
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

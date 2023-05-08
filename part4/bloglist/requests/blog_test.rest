@@ -23,6 +23,21 @@ Content-Type: application/json
 
 ###
 
+// post request with token 
+post http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpoYXJ0IiwiaWQiOiI2NDU4NzBhMDFjZWFlMTUzNWNiNmY3OGMiLCJpYXQiOjE2ODM1MTc2Mzl9.A9tdk3dSz2rEyqLs7Kt9-vFZoMRZolR9CTQN780o1CE
+
+{
+  "title": "tokens are cool",
+  "author": "riley rileyson",
+  "url": "example.com/token",
+  "likes": 5,
+  "userID": "6456eba991a1266cf91347d7"
+}
+
+###
+
 PUT http://localhost:3003/api/blogs/id
 Content-Type: application/json
 
@@ -36,4 +51,4 @@ Content-Type: application/json
 ###
 
 // send delete request for a blog
-DELETE http://localhost:3003/api/blogs/id
+DELETE http://localhost:3003/api/blogs/6456ec3891a1266cf91347e0
